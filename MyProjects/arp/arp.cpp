@@ -123,20 +123,23 @@ int main(void)
     // How many samples we'll output per second
     float sampleRate = hardware.AudioSampleRate();
 
-    // Set button to pin 28, to be updated at a 1kHz  sampleRate
+    // Set button to pin 28, to be updated at a 1kHz sampleRate
     int pin = 28;
     for (size_t i = 0; i < buttons.size(); i++) {
         buttons[i].Init(hardware.GetPin(pin), sampleRate / 48.f);
         pin--;
     }
-//This is our ADC configuration
+
+    // This is our ADC configuration
     AdcChannelConfig adcConfig;
-    //Configure pin 21 as an ADC input. This is where we'll read the knob.
+    
+    // Configure pin 21 as an ADC input. This is where we'll read the knob.
     adcConfig.InitSingle(hardware.GetPin(21));
 
-    //Initialize the adc with the config we just made
+    // Initialize the adc with the config we just made
     hardware.adc.Init(&adcConfig, 1);
-    //Start reading values
+    
+    // Start reading values
     hardware.adc.Start();
 
     // Set up oscillator
@@ -159,7 +162,8 @@ int main(void)
 
     // Loop forever
     for(;;) {
-        arpSpeed = hardware.adc.GetFloat(0);
+        // GetFloat is between 0.0 and 1.0, so we multiply by 1000 to get a range of 0 to 1000
+        arpSpeed = hardware.adc.GetFloat(0) * 1000;
     }
 
 }
