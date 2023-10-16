@@ -129,6 +129,15 @@ int main(void)
         buttons[i].Init(hardware.GetPin(pin), sampleRate / 48.f);
         pin--;
     }
+//This is our ADC configuration
+    AdcChannelConfig adcConfig;
+    //Configure pin 21 as an ADC input. This is where we'll read the knob.
+    adcConfig.InitSingle(hardware.GetPin(21));
+
+    //Initialize the adc with the config we just made
+    hardware.adc.Init(&adcConfig, 1);
+    //Start reading values
+    hardware.adc.Start();
 
     // Set up oscillator
     osc.Init(sampleRate);
@@ -149,5 +158,8 @@ int main(void)
     hardware.StartAudio(AudioCallback);
 
     // Loop forever
-    for(;;) {}
+    for(;;) {
+        arpSpeed = hardware.adc.GetFloat(0);
+    }
+
 }
